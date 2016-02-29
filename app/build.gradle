@@ -27,6 +27,8 @@ dependencies {
     compile 'com.android.support:design:23.2.0'
     compile 'com.android.support:support-annotations:23.2.0'
 
+    compile project(':elygo-lib')
+
     compile('com.mikepenz:materialdrawer:5.0.7@aar') {
         transitive = true
     }

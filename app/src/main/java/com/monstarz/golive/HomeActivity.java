@@ -1,5 +1,6 @@
 package com.monstarz.golive;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,7 +21,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
+    private Toolbar toolbars;
 
     private Drawer drawer;
 
@@ -28,8 +29,8 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        toolbars = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbars);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -62,44 +63,16 @@ public class HomeActivity extends AppCompatActivity {
                     .withEmail("sortofrican90@gmail.com")
                     .withIcon(getResources().getDrawable(android.R.drawable.sym_def_app_icon))
             )
+            .withSelectionListEnabled(false)
             .build();
 
         drawer = new DrawerBuilder()
             .withActivity(this)
-            .withToolbar(toolbar)
+            .withToolbar(toolbars)
             .withAccountHeader(header)
             .addDrawerItems(
-                new ExpandableDrawerItem()
-                    .withName("People")
-                    .withIcon(GoogleMaterial.Icon.gmd_people)
-                    .withSubItems(
-                        new SecondaryDrawerItem()
-                            .withName("Friends")
-                            .withIcon(android.R.color.transparent),
-                        new SecondaryDrawerItem()
-                            .withName("Seeking Match")
-                            .withIcon(android.R.color.transparent)
-                    )
-                    .withIsExpanded(true),
-                new ExpandableDrawerItem()
-                    .withName("Matches")
-                    .withIcon(GoogleMaterial.Icon.gmd_grid_on)
-                    .withSubItems(
-                        new SecondaryDrawerItem()
-                            .withName("My Turn")
-                            .withIcon(android.R.color.transparent)
-                            .withBadge("3"),
-                        new SecondaryDrawerItem()
-                            .withName("Public")
-                            .withIcon(android.R.color.transparent),
-                        new SecondaryDrawerItem()
-                            .withName("Find a Match")
-                            .withIcon(android.R.color.transparent),
-                        new SecondaryDrawerItem()
-                            .withName("Create a Match")
-                            .withIcon(android.R.color.transparent)
-                    )
-                    .withIsExpanded(true)
+                getPeopleDrawerItem(),
+                getMatchesDrawerItem()
             )
             .addStickyDrawerItems(
                 new PrimaryDrawerItem()
@@ -116,5 +89,68 @@ public class HomeActivity extends AppCompatActivity {
                 }
             })
             .build();
+    }
+
+    private ExpandableDrawerItem getPeopleDrawerItem() {
+        return new ExpandableDrawerItem()
+            .withName("People")
+            .withIcon(GoogleMaterial.Icon.gmd_people)
+            .withSubItems(
+                new SecondaryDrawerItem()
+                    .withName("Friends")
+                    .withIcon(android.R.color.transparent),
+                new SecondaryDrawerItem()
+                    .withName("Seeking Match")
+                    .withIcon(android.R.color.transparent)
+            )
+            .withIsExpanded(true);
+    }
+
+    private ExpandableDrawerItem getMatchesDrawerItem() {
+        return new ExpandableDrawerItem()
+            .withName("Matches")
+            .withIcon(GoogleMaterial.Icon.gmd_grid_on)
+            .withSubItems(
+                new SecondaryDrawerItem()
+                    .withName("My Turn")
+                    .withIcon(android.R.color.transparent)
+                    .withBadge("3")
+                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                        @Override
+                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                            return true;
+                        }
+                    }),
+                new SecondaryDrawerItem()
+                    .withName("Public")
+                    .withIcon(android.R.color.transparent)
+                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                        @Override
+                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                            return false;
+                        }
+                    }),
+                new SecondaryDrawerItem()
+                    .withName("Find a Match")
+                    .withIcon(android.R.color.transparent)
+                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                        @Override
+                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                            return false;
+                        }
+                    }),
+                new SecondaryDrawerItem()
+                    .withName("New Match")
+                    .withIcon(android.R.color.transparent)
+                    .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                        @Override
+                        public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                            Intent intent = new Intent(getApplicationContext(), NewMatchActivity.class);
+                            startActivity(intent);
+                            return true;
+                        }
+                    })
+            )
+            .withIsExpanded(true);
     }
 }
